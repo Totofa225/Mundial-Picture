@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mundial Picture - Coleccionables de Mundiales</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background-color: #f1f8e9; 
+        }
+
+        header {
+            background-color: #1b5e20;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .logo { font-size: 1.5rem; font-weight: bold; }
+        
+        .search-container {
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        .search-bar {
+            padding: 10px 20px;
+            border-radius: 25px;
+            border: 2px solid #ccff90;
+            width: 50%;
+            min-width: 250px;
+            font-size: 1rem;
+            outline: none;
+            transition: box-shadow 0.3s;
+        }
+
+        .search-bar:focus {
+            box-shadow: 0 0 10px rgba(204, 255, 144, 0.8);
+        }
+
+        .cart-container {
+            background-color: #2e7d32;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            border: 2px solid #ccff90;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .cart-container span {
+            color: #ccff90;
+        }
+
+        .btn-confirmar {
+            background-color: #ffc107;
+            color: #333;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .btn-confirmar:hover {
+            background-color: #e0a800;
+        }
+        
+        .hero {
+            text-align: center;
+            padding: 5rem 1rem;
+            color: white;
+            background: linear-gradient(to bottom, rgba(27, 94, 32, 0.4), rgba(0, 0, 0, 0.8)), url('image_ab302d.png') no-repeat center center;
+            background-size: cover;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.9);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .hero h1 { font-size: 3.5rem; margin-bottom: 5px; }
+        .hero p { font-size: 1.5rem; font-weight: bold; color: #ccff90; margin-top: 0; margin-bottom: 20px;}
+        
+        /* ETIQUETA DE LA MATERIA (NUEVO) */
+        .materia-badge {
+            display: inline-block;
+            background-color: #ffc107;
+            color: #1b5e20;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 1rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+            text-shadow: none;
+            border: 2px solid #fff;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: -2rem auto 2rem auto;
+            padding: 2rem;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+
+        .country-section {
+            margin-top: 2.5rem;
+            padding-top: 1rem;
+        }
+
+        /* ESTILOS DE LOS TÍTULOS CON BANDERAS (NUEVO) */
+        .country-title {
+            font-size: 1.6rem;
+            margin-bottom: 1.5rem;
+            padding: 10px 15px;
+            border-radius: 8px;
+            color: white;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.9); /* Sombra fuerte para asegurar lectura */
+        }
+
+        .title-arg { background: linear-gradient(to right, #74acdf 30%, #ffffff 70%, #74acdf); color: #000; text-shadow: 1px 1px 3px rgba(255,255,255,0.8); border-left: 5px solid #d4af37; }
+        .title-bra { background: linear-gradient(to right, #009c3b 40%, #ffdf00 80%); border-left: 5px solid #002776; }
+        .title-col { background: linear-gradient(to right, #fcd116 50%, #003893 80%, #ce1126 100%); color: #000; text-shadow: 1px 1px 3px rgba(255,255,255,0.8); border-left: 5px solid #ce1126; }
+        .title-mex { background: linear-gradient(to right, #006847 33%, #ffffff 66%, #ce1126 100%); border-left: 5px solid #000; }
+        .title-esp { background: linear-gradient(to right, #aa151b 20%, #f1bf00 50%, #aa151b 80%); border-left: 5px solid #000; }
+        .title-fra { background: linear-gradient(to right, #002395 33%, #ffffff 66%, #ed2939 100%); border-left: 5px solid #000; }
+        .title-cro { background: linear-gradient(to right, #ff0000 33%, #ffffff 66%, #171796 100%); border-left: 5px solid #000; }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 20px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border: 2px solid #ddd;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(46, 125, 50, 0.3);
+            border-color: #c8e6c9;
+        }
+
+        @keyframes pulsoSeleccion {
+            0% { transform: scale(1); border-color: #ddd; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+            50% { transform: scale(1.05); border-color: #4caf50; box-shadow: 0 0 20px rgba(76, 175, 80, 0.6); }
+            100% { transform: scale(1); border-color: #ddd; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        }
+
+        @keyframes pulsoQuitar {
+            0% { transform: scale(1); border-color: #ddd; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+            50% { transform: scale(0.95); border-color: #f44336; box-shadow: 0 0 20px rgba(244, 67, 54, 0.6); }
+            100% { transform: scale(1); border-color: #ddd; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        }
+
+        .animacion-compra { animation: pulsoSeleccion 0.4s ease-out; border-color: #4caf50 !important; }
+        .animacion-quitar { animation: pulsoQuitar 0.4s ease-out; border-color: #f44336 !important; }
+
+        .sticker-img {
+            width: 105px;
+            height: 145px;
+            object-fit: contain;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            background-color: #f8f9fa; 
+        }
+
+        .card-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 145px;
+        }
+
+        .card-info h3 { margin: 0; font-size: 1.1rem; }
+        .player-details { font-size: 0.8rem; color: #555; margin: 5px 0; }
+        .price { color: #2e7d32; font-weight: bold; font-size: 1.1rem; margin: 0; }
+        
+        .botones-accion {
+            display: flex;
+            gap: 5px;
+            margin-top: auto;
+        }
+
+        .btn {
+            flex: 1;
+            color: white;
+            padding: 8px 5px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            text-align: center;
+            transition: background 0.3s;
+            font-family: inherit;
+        }
+
+        .btn:active { transform: scale(0.95); }
+        
+        .btn-comprar { background-color: #2e7d32; }
+        .btn-comprar:hover { background-color: #1b5e20; }
+        
+        .btn-quitar { background-color: #d32f2f; }
+        .btn-quitar:hover { background-color: #b71c1c; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">⚽ Mundial Picture</div>
+        
+        <div class="search-container">
+            <input type="text" id="buscador" class="search-bar" placeholder="Buscar por jugador o país..." onkeyup="filtrarCartas()">
+        </div>
+
+        <div class="cart-container">
+            <div>🛒 <span id="cantidad-items">0</span> Cartas | Total: $<span id="total-carrito">0</span> ARS</div>
+            <button class="btn-confirmar" onclick="confirmarCompra()">Confirmar Compra</button>
+        </div>
+    </header>
+
+    <div class="hero">
+        <h1>Mundial Picture</h1>
+        <p>Los Futbolistas del Mundial Coleccionables!!!</p>
+        <div class="materia-badge">Algoritmos y Estructuras de Datos - Actividad Formativa N°2</div>
+    </div>
+
+    <div class="container">
+        
+        <div class="country-section">
+            <h3 class="country-title title-arg">🇦🇷 Argentina</h3>
+            <div class="products-grid">
+                <div class="product-card">
+                    <img src="image_aac387.png" alt="Lionel Messi" class="sticker-img">
+                    <div class="card-info">
+                        <h3 class="nombre-jugador">Lionel Messi</h3>
+                        <div class="player-details">Qatar 2022<br>Delantero</div>
+                        <p class="price">$9.500 ARS</p>
+                        <div class="botones-accion">
+                            <button class="btn btn-comprar" onclick="agregarAlCarrito('Lionel Messi', 9500, this)">Comprar</button>
+                            <button class="btn btn-quitar" onclick="quitarDelCarrito('Lionel Messi', 9500, this)">Quitar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <img src="image_aac3e4.png" alt="Rodrigo De Paul" class="sticker-img">
+                    <div class="card-info">
+                        <h3 class="nombre-jugador">Rodrigo De Paul</h3>
+                        <div class="player-details">Qatar 2022<br>Mediocampista</div>
+                        <p class="price">$6.200 ARS</p>
+                        <div class="botones-accion">
+                            <button class="btn btn-comprar" onclick="agregarAlCarrito('Rodrigo De Paul', 6200, this)">Comprar</button>
+                            <button class="btn btn-quitar" onclick="quitarDelCarrito('Rodrigo De Paul', 6200, this)">Quitar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <img src="image_aac427.png" alt="Alexis Mac Allister" class="sticker-img">
+                    <div class="card-info">
+                        <h3 class="nombre-jugador">Alexis Mac Allister</h3>
+                        <div class="player-details">Qatar 2022<br>Mediocampista</div>
+                        <p class="price">$7.100 ARS</p>
+                        <div class="botones-accion">
+                            <button class="btn btn-comprar" onclick="agregarAlCarrito('Alexis Mac Allister', 7100, this)">Comprar</button>
+                            <button class="btn btn-quitar" onclick="quitarDelCarrito('Alexis Mac Allister', 7100, this)">Quitar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="country-section">
+            <h3 class="country-title title-bra">🇧🇷 Brasil</h3>
+            <div class="products-grid">
+                <div class="product-card">
+                    <img src="image_aac463.png" alt="Neymar Jr." class="sticker-img">
+                    <div class="card-info">
+                        <h3 class="nombre-jugador">Neymar Jr.</h3>
+                        <div class="player-details">Qatar 2022<br>Delantero</div>
+                        <p class="price">$8.900 ARS</p>
+                        <div class="botones-accion">
+                            <button class="btn btn-comprar" onclick="agregarAlCarrito('Neymar Jr.', 8900, this)">Comprar</button>
+                            <button class="btn btn-quitar" onclick="quitarDelCarrito('Neymar Jr.', 8900, this)">Quitar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <img src="image_aac727.png" alt="Lucas Paquetá" class="sticker-img">
+                    <div class="card-info">
+                        <h3 class="nombre-jugador">Lucas Paquetá</h3>
+                        <div class="player-details">Qatar 2022<br>Mediocampista</div>
+                        <p class="price">$5.400 ARS</p>
+                        <div class="botones-accion">
+                            <button class="btn btn-comprar" onclick="agregarAlCarrito('Lucas Paquetá', 5400, this)">Comprar</button>
+                            <button class="btn btn-quitar" onclick="quitarDelCarrito('Lucas Paquetá', 5400, this)">Quitar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <img src="image_aac74c.png" alt="Vinícius Jr." class="sticker-img">
+                    <div class="card-info">
+                        <h3 class="nombre-jugador">Vinícius Jr.</h3>
+                        <div class="player-details">Qatar 2022<br>Delantero</div>
+                        <p class="price">$8.200 ARS</p>
+                        <div class="botones-accion">
+                            <button class="btn btn-comprar" onclick="agregarAlCarrito('Vinícius Jr.', 8200, this)">Comprar</button>
+                            <button class="btn btn-quitar" onclick="quitarDelCarrito('Vinícius Jr.', 8200, this)">Quitar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="country-section">
+            <h3 class="country-title title-col">🇨🇴 Colombia</h3>
+            <div class="products-grid">
+                <div class="product-card">
+                    <img src="image_aac789.png" alt="Richard Ríos" class="sticker-img">
+                    <div class="card-info">
+                        <h3 class="nombre-jugador">Richard Ríos</h3>
+                        <div class="player-details">Copa América 2024<br>Mediocampista</div>
+                        <p class="price">$5.200 ARS</p>
+                        <div class="botones-accion">
+                            <button class="btn btn-comprar" onclick="agregarAlCarrito('Richard Ríos', 5200, this)">Comprar</button>
+                            <button class="btn btn-quitar" onclick="quitarDelCarrito('Richard Ríos', 5200, this)">Quitar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <img src="image_aac7ac.png" alt="Juan F. Quintero" class="sticker-img">
+                    <div class="card-info">
+                        <h3 class="nombre-jugador">Juan F. Quintero</h3>
+                        <div class="player-details">Italia 1990<br>Mediocampista</div>
+                        <p class="price">$5.000 ARS</p>
+                        <div class="botones-accion">
+                            <button class="btn btn-comprar" onclick="agregarAlCarrito('Juan F. Quintero', 5000, this)">Comprar</button>
+                            <button class="btn btn-quitar" onclick="quitarDelCarrito('Juan F. Quintero', 5000, this)">Quitar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <img src="image_aac7c9.png" alt="James Rodríguez" class="sticker-img">
+                    <div class="card-info">
+                        <h3 class="nombre-jugador">James Rodríguez</h3>
+                        <div class="player-details">Brasil 2014<br>Mediocampista</div>
+                        <p class="price">$6.800 ARS</p>
+                        <div class="botones-accion">
+                            <button class="btn btn-comprar" onclick="agregarAlCarrito('James Rodríguez', 6800, this)">Comprar</button>
+                            <button class="btn btn-quitar" onclick="quitarDelCarrito('James Rodríguez', 6800, this)">Quitar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="country-section">
+            <h3 class="country-title title-mex">🇲🇽 México</h3>
+            <div class="products-grid">
+                <div class="product-card">
+                    <img src="ochoa.png" alt="Guillermo Ochoa" class="sticker-img">
+                    <div class="card-info">
+                        <h3 class="nombre-jugador">Guillermo Ochoa</h3>
+                        <div class="player-details">Qatar 2022<br>Arquero</div>
+                        <p class="price">$5.800 ARS</p>
+                        <div class="botones-accion">
+                            <button class="btn btn-comprar" onclick="agregarAlCarrito('Guillermo Ochoa', 5800, this)">Comprar</button>
+                            <button class="btn btn-quitar" onclick="quitarDelCarrito('Guillermo Ochoa', 5800, this)">Quitar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <img src="lozano.png" alt="Hirving Lozano" class="sticker-img">
+                    <div class="card-info">
+                        <h3 class="nombre-jugador">Hirving Lozano</h3>
+                        <div class="player-details">Mundial 2026<br>Delantero</div>
+                        <p class="price">$5.500 ARS</p>
+                        <div class="botones-accion">
+                            <button class="btn btn-comprar" onclick="agregarAlCarrito('Hirving Lozano', 5500, this)">Comprar</button>
+                            <button class="btn btn-quitar" onclick="quitarDelCarrito('Hirving Lozano', 5500, this)">Quitar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <img src="gimenez.png" alt="Santiago Giménez" class="sticker-img">
+                    <div class="card-info">
+                        <h3 class="nombre-jugador">Santiago Giménez</h3>
+                        <div class="player-details">Mundial 2026<br>Delantero</div>
+                        <p class="price">$7.600 ARS</p>
+                        <div class="botones-accion">
+                            <button class="btn btn-comprar" onclick="agregarAlCarrito('Santiago Giménez', 7600, this)">Comprar</button>
+                            <button class="btn btn-quitar" onclick="quitarDelCarrito('Santiago Giménez', 7600, this)">Quitar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="country-section">
+            <h3 class="country-title title-esp">🇪🇸 España</h3>
+            <div class="products-grid">
+                <div class="product-card">
+                    <img src="yamal.png" alt="Lamine Yamal" class="sticker-img">
+                    <div class="card-info">
+                        <h3 class="nombre-jugador">Lamine Yamal</h3>
+                        <div class="player-details">Mundial 2026<br>Delantero</div>
+                        <p class="price">$9.800 ARS</p>
+                        <div class="botones-accion">
+                            <button class="btn btn-comprar" onclick="agregarAlCarrito('Lamine Yamal', 9800, this)">Comprar</button>
+                            <button class="btn btn-quitar" onclick="quitarDelCarrito('Lamine Yamal', 9800, this)">Quitar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <img src="rodri.png" alt="Rodri Hernández" class="sticker-img">
+                    <div class="card-info">
+                        <h3 class="nombre-jugador">Rodri Hernández</h3>
+                        <div class="player-details">Mundial 2026<br>Mediocampista</div>
+                        <p class="price">$7.500 ARS</p>
+                        <div class="botones-accion">
+                            <button class="btn btn-comprar" onclick="agregarAlCarrito('Rodri Hernández', 7500, this)">Comprar</button>
+                            <button class="btn btn-quitar" onclick="quitarDelCarrito('Rodri Hernández', 7500, this)">Quitar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <img src="pedri.png" alt="Pedri González" class="sticker-img">
+                    <div class="card-info">
+                        <h3 class="nombre-jugador">Pedri González</h3>
+                        <div class="player-details">Mundial 2026<br>Mediocampista</div>
+                        <p class="price">$8.500 ARS</p>
+                        <div class="botones-accion">
+                            <button class="btn btn-comprar" onclick="agregarAlCarrito('Pedri González', 8500, this)">Comprar</button>
+                            <button class="btn btn-quitar" onclick="quitarDelCarrito('Pedri González', 8500, this)">Quitar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="country-section">
+            <h3 class="country-title title-fra">🇫🇷 Francia</h3>
+            <div class="products-grid">
+                <div class="product-card">
+                    <img src="mbappe.png" alt="Kylian Mbappé" class="sticker-img">
+                    <div class="card-info">
+                        <h3 class="nombre-jugador">Kylian Mbappé</h3>
+                        <div class="player-details">Mundial 2026<br>Delantero</div>
+                        <p class="price">$9.200 ARS</p>
+                        <div class="botones-accion">
+                            <button class="btn btn-comprar" onclick="agregarAlCarrito('Kylian Mbappé', 9200, this)">Comprar</button>
+                            <button class="btn btn-quitar" onclick="quitarDelCarrito('Kylian Mbappé', 9200, this)">Quitar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <img src="griezmann.png" alt="Antoine Griezmann" class="sticker-img">
+                    <div class="card-info">
+                        <h3 class="nombre-jugador">Antoine Griezmann</h3>
+                        <div class="player-details">Mundial 2026<br>Mediocampista</div>
+                        <p class="price">$6.500 ARS</p>
+                        <div class="botones-accion">
+                            <button class="btn btn-comprar" onclick="agregarAlCarrito('Antoine Griezmann', 6500, this)">Comprar</button>
+                            <button class="btn btn-quitar" onclick="quitarDelCarrito('Antoine Griezmann', 6500, this)">Quitar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <img src="dembele.png" alt="Ousmane Dembélé" class="sticker-img">
+                    <div class="card-info">
+                        <h3 class="nombre-jugador">Ousmane Dembélé</h3>
+                        <div class="player-details">Mundial 2026<br>Delantero</div>
+                        <p class="price">$7.300 ARS</p>
+                        <div class="botones-accion">
+                            <button class="btn btn-comprar" onclick="agregarAlCarrito('Ousmane Dembélé', 7300, this)">Comprar</button>
+                            <button class="btn btn-quitar" onclick="quitarDelCarrito('Ousmane Dembélé', 7300, this)">Quitar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="country-section">
+            <h3 class="country-title title-cro">🇭🇷 Croacia</h3>
+            <div class="products-grid">
+                <div class="product-card">
+                    <img src="modric.png" alt="Luka Modrić" class="sticker-img">
+                    <div class="card-info">
+                        <h3 class="nombre-jugador">Luka Modrić</h3>
+                        <div class="player-details">Mundial 2026<br>Mediocampista</div>
+                        <p class="price">$7.200 ARS</p>
+                        <div class="botones-accion">
+                            <button class="btn btn-comprar" onclick="agregarAlCarrito('Luka Modrić', 7200, this)">Comprar</button>
+                            <button class="btn btn-quitar" onclick="quitarDelCarrito('Luka Modrić', 7200, this)">Quitar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <img src="gvardiol.png" alt="Joško Gvardiol" class="sticker-img">
+                    <div class="card-info">
+                        <h3 class="nombre-jugador">Joško Gvardiol</h3>
+                        <div class="player-details">Mundial 2026<br>Defensor</div>
+                        <p class="price">$6.100 ARS</p>
+                        <div class="botones-accion">
+                            <button class="btn btn-comprar" onclick="agregarAlCarrito('Joško Gvardiol', 6100, this)">Comprar</button>
+                            <button class="btn btn-quitar" onclick="quitarDelCarrito('Joško Gvardiol', 6100, this)">Quitar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <img src="kovacic.png" alt="Mateo Kovačić" class="sticker-img">
+                    <div class="card-info">
+                        <h3 class="nombre-jugador">Mateo Kovačić</h3>
+                        <div class="player-details">Mundial 2026<br>Mediocampista</div>
+                        <p class="price">$5.900 ARS</p>
+                        <div class="botones-accion">
+                            <button class="btn btn-comprar" onclick="agregarAlCarrito('Mateo Kovačić', 5900, this)">Comprar</button>
+                            <button class="btn btn-quitar" onclick="quitarDelCarrito('Mateo Kovačić', 5900, this)">Quitar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- 1. MEMORIA DEL CARRITO ---
+        let totalItems = 0;
+        let precioTotal = 0;
+        let carrito_memoria = {};
+
+        function actualizarPantalla() {
+            document.getElementById('cantidad-items').innerText = totalItems;
+            document.getElementById('total-carrito').innerText = precioTotal.toLocaleString('es-AR');
+        }
+
+        // --- 2. FUNCIONES DE COMPRAR Y QUITAR ---
+        function agregarAlCarrito(nombreCarta, precioCarta, boton) {
+            if (!carrito_memoria[nombreCarta]) {
+                carrito_memoria[nombreCarta] = 0;
+            }
+            
+            carrito_memoria[nombreCarta]++;
+            totalItems++;
+            precioTotal += precioCarta;
+
+            actualizarPantalla();
+
+            let tarjeta = boton.closest('.product-card');
+            tarjeta.classList.add('animacion-compra');
+            setTimeout(() => { tarjeta.classList.remove('animacion-compra'); }, 400);
+        }
+
+        function quitarDelCarrito(nombreCarta, precioCarta, boton) {
+            if (carrito_memoria[nombreCarta] && carrito_memoria[nombreCarta] > 0) {
+                carrito_memoria[nombreCarta]--;
+                totalItems--;
+                precioTotal -= precioCarta;
+                
+                actualizarPantalla();
+
+                let tarjeta = boton.closest('.product-card');
+                tarjeta.classList.add('animacion-quitar');
+                setTimeout(() => { tarjeta.classList.remove('animacion-quitar'); }, 400);
+            } else {
+                alert("No tienes esta figura de " + nombreCarta + " en el carrito para poder sacarla.");
+            }
+        }
+
+        // --- 3. CONFIRMAR COMPRA Y VACIAR ---
+        function confirmarCompra() {
+            if (totalItems === 0) {
+                alert("¡El carrito está vacío! Seleccioná al menos una figura antes de comprar.");
+                return;
+            }
+
+            let direccion = prompt("¿Donde desea Recibir sus Figuritas?");
+
+            if (direccion === null || direccion.trim() === "") {
+                alert("Debes ingresar una dirección válida para realizar el envío. Compra no procesada.");
+                return;
+            }
+
+            alert("¡Compra Confirmada!\n\nHas comprado " + totalItems + " cartas por un total de $" + precioTotal.toLocaleString('es-AR') + " ARS.\n\nTus figuritas serán enviadas a:\n📍 " + direccion + "\n\n¡Gracias por elegir Mundial Picture!");
+
+            totalItems = 0;
+            precioTotal = 0;
+            carrito_memoria = {};
+            actualizarPantalla();
+        }
+
+        // --- 4. LÓGICA DEL BUSCADOR ---
+        function filtrarCartas() {
+            let input = document.getElementById('buscador').value.toLowerCase();
+            let seccionesPaises = document.getElementsByClassName('country-section');
+
+            for (let i = 0; i < seccionesPaises.length; i++) {
+                let tarjetas = seccionesPaises[i].getElementsByClassName('product-card');
+                let pais = seccionesPaises[i].querySelector('.country-title').innerText.toLowerCase();
+                let hayCoincidenciaEnEstePais = false; 
+
+                for (let j = 0; j < tarjetas.length; j++) {
+                    let nombreJugador = tarjetas[j].querySelector('.nombre-jugador').innerText.toLowerCase();
+                    
+                    if (nombreJugador.includes(input) || pais.includes(input)) {
+                        tarjetas[j].style.display = "flex";
+                        hayCoincidenciaEnEstePais = true; 
+                    } else {
+                        tarjetas[j].style.display = "none";
+                    }
+                }
+
+                if (hayCoincidenciaEnEstePais) {
+                    seccionesPaises[i].style.display = "block";
+                } else {
+                    seccionesPaises[i].style.display = "none";
+                }
+            }
+        }
+    </script>
+
+</body>
+</html>
